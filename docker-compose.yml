@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  proxychain-v2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: abyan/proxychain-dockerv2:latest
+    container_name: proxychain-dockerv2
+    restart: unless-stopped
+
+    # =========================================================================
+    # NETWORKING MODE
+    # =========================================================================
+    # Host Mode direkomendasikan di Linux VPS agar ProxyChain dapat membuka ratusan
+    # port relay dinamis (10001+) dan port WireProxy tanpa batasan mapping port Docker.
+    network_mode: "host"
+
+    # Alternatif Bridge Mode (untuk Docker Desktop Windows / Mac):
+    # ports:
+    #   - "8080:8080"
+    #   - "10001-10050:10001-10050"
+
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PROXYCHAIN_HOST=0.0.0.0
+      - PROXYCHAIN_DASHBOARD_PORT=8080
+      - PROXYCHAIN_START_PORT=10001
+      - PROXYCHAIN_USER=gemini
+      - PROXYCHAIN_PASS=gemini
+      # - PROXYCHAIN_PUBLIC_HOST=
+      # - TRAFF_TOKEN=
+      # - SURFSHARK_KEY=
+
+    volumes:
+      - ./config.json:/app/config.json
+      - ./proxies.txt:/app/proxies.txt
+      - ./surfshark_servers.json:/app/surfshark_servers.json
+      - ./candidates.txt:/app/candidates.txt
+      - ./live_proxies.json:/app/live_proxies.json
