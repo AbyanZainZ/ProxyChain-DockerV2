@@ -192,8 +192,11 @@ print('TraffMonetizer Token updated to: $2')
             echo "Penggunaan: proxychain token <TRAFF_TOKEN>"
         fi
         ;;
+    test|check)
+        /opt/proxychain-v2/venv/bin/python3 /opt/proxychain-v2/check_relays.py "${2:-10001}" "${3:-10249}"
+        ;;
     *)
-        echo "Penggunaan: proxychain {start|stop|restart|status|logs|attach|token <TOKEN>}"
+        echo "Penggunaan: proxychain {start|stop|restart|status|logs|attach|token <TOKEN>|test [START_PORT] [END_PORT]}"
         exit 1
         ;;
 esac
