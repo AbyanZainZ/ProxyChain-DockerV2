@@ -192,11 +192,21 @@ print('TraffMonetizer Token updated to: $2')
             echo "Penggunaan: proxychain token <TRAFF_TOKEN>"
         fi
         ;;
+    start-relay)
+        echo "[+] Mengaktifkan seluruh port relay proxy..."
+        curl -s -X POST http://127.0.0.1:8080/api/relay/start-all | grep -o '"message":[^,}]*' || echo "Gagal menghubungi dashboard."
+        echo ""
+        ;;
+    stop-relay)
+        echo "[-] Menutup seluruh port relay proxy..."
+        curl -s -X POST http://127.0.0.1:8080/api/relay/stop-all | grep -o '"message":[^,}]*' || echo "Gagal menghubungi dashboard."
+        echo ""
+        ;;
     test|check)
-        /opt/proxychain-v2/venv/bin/python3 /opt/proxychain-v2/check_relays.py "${2:-10001}" "${3:-10249}"
+        /opt/proxychain-v2/venv/bin/python3 /opt/proxychain-v2/check_relays.py "$2" "$3"
         ;;
     *)
-        echo "Penggunaan: proxychain {start|stop|restart|status|logs|attach|token <TOKEN>|test [START_PORT] [END_PORT]}"
+        echo "Penggunaan: proxychain {start|stop|restart|status|logs|attach|token <TOKEN>|start-relay|stop-relay|test [PORT]}"
         exit 1
         ;;
 esac

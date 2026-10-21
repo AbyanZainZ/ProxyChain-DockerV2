@@ -543,6 +543,22 @@ async def lifespan(app: FastAPI):
             custom_proxy_nodes = parsed
             save_nodes_file(get_combined_nodes())
 
+    async def auto_start_relays_on_boot():
+        await asyncio.sleep(1.0)
+        combined = get_combined_nodes()
+        if combined:
+            print(f"[ProxyChain-V2] Auto-starting {len(combined)} relay ports on boot...")
+            privkey = config.get("surfshark_private_key", "")
+            token = config.get("traff_token", "TM_TOKEN")
+            for n in surfshark_nodes:
+                if not n.wp_pid:
+                    try: supervisor.start_harvester(n, token, surfshark_privkey=privkey)
+                    except Exception: pass
+            started = await relay_manager.sync_all_relays(combined)
+            save_nodes_file(combined)
+            print(f"[ProxyChain-V2] {started} relay ports successfully active on 127.0.0.1:{relay_manager.start_port}+!")
+
+    asyncio.create_task(auto_start_relays_on_boot())
     asyncio.create_task(auto_supervisor_loop())
     yield
     supervisor.stop_all_harvesters(get_combined_nodes())
