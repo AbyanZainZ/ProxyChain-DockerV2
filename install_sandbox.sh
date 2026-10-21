@@ -62,7 +62,7 @@ if [ -f "app.py" ] && [ -d "static" ]; then
     echo -e "${CYAN}Menyalin file dari direktori saat ini...${NC}"
     cp -a . "$INSTALL_DIR/"
 else
-    REPO_URL="${1:-https://github.com/AbyanZainZ/ProxyChain-docker.git}"
+    REPO_URL="${1:-https://github.com/AbyanZainZ/ProxyChain-DockerV2.git}"
     echo -e "${YELLOW}Mengunduh source code dari ${REPO_URL}...${NC}"
     if [ -d "$INSTALL_DIR/.git" ]; then
         git -C "$INSTALL_DIR" pull || true
